@@ -1,4 +1,6 @@
 <ruleset name="mule4globalruleset">
+        <exclude-pattern>src/main/mule/*</exclude-pattern>
+        <include-pattern>src/main/mule/global.xml</include-pattern>
     <rule name="AutoDiscoveryShouldBeUsedForApis"
         language="xml"
         message="AutoDiscovery should be used to register the app in API manager"
@@ -6,8 +8,6 @@
         <description>
             AutoDiscovery should be used to register the app in API manager
         </description>
-        <exclude-pattern>src/main/mule/*</exclude-pattern>
-        <include-pattern>src/main/mule/global.xml</include-pattern>
         <priority>3</priority>
         <properties>
             <property name="xpath">
