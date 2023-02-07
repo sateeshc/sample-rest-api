@@ -12,7 +12,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    count(//*:mule/*:autodiscovery)=0
+                    count(//mule:mule/*:autodiscovery)=0
                     ]]>
                 </value>
             </property>
