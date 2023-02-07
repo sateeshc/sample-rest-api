@@ -19,7 +19,9 @@ http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org
     <secure-properties:config name="secure.properties.config" doc:name="Secure Properties Config" doc:id="eeb3ce8e-d424-43fe-8de2-122fdf0bfbc7" file="config/secure-config-${mule.env}.yaml" key="${mule.key}" />
     <!-- HTTP(s) Listener Config - START HERE -->
     <apikit:config name="apiRamlTemplateConfig" api="api-raml-template.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <!--
     <api-gateway:autodiscovery apiId="${api.id}" doc:name="API Autodiscovery" doc:id="b79c97b5-1dbf-4eb0-b4c3-9541c4c334a3" flowRef="rest-api-project-template-main" ignoreBasePath="true"/>
+-->
 	<configuration-properties doc:name="Configuration properties" doc:id="24bc6686-6f47-4fc1-b882-cadd76061cd9" file="config/common.yaml" />
 	<json-logger:config name="JsonLoggerConfig" doc:name="JSON Logger Config" doc:id="949e0cab-b29d-4ab9-94ff-2ba779a28c68" environment="${mule.env}" applicationName="#[app.name]"/>
 	<configuration doc:name="Configuration" doc:id="ef26f7df-b414-44f7-9516-9afbe68579d5" defaultErrorHandler-ref="Global_Error_Handler" />
