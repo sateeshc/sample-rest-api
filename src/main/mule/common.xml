@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:error-handler-plugin="http://www.mulesoft.org/schema/mule/error-handler-plugin"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org/schema/mule/error-handler-plugin/current/mule-error-handler-plugin.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<error-handler name="Global_Error_Handler" doc:id="e02bfebf-a5a8-4eca-a92f-ce17b2415ab3" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8b35a294-362e-4ca9-8c38-80cb9ced229b" type="HTTP:CONNECTIVITY">
+			<error-handler-plugin:on-error doc:name="processConnectivityError" doc:id="30db1c61-b714-4096-9145-c592b6170c15" config-ref="errorHandlerPluginConfig"/>
+			<set-variable value="504" doc:name="HttpStatusResponse" doc:id="1c2e2b6d-1c35-4a98-9545-afc1c1ac32da" variableName="httpStatus"/>
+			<flow-ref doc:name="callGenerateErrorSubFlow" doc:id="5763e2ae-7291-4a4b-92df-e36d8d41e6e0" name="Generate_Error_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1950acda-a5c0-4c58-b318-8a061926a911" type="HTTP:CLIENT_SECURITY">
+			<error-handler-plugin:on-error doc:name="processSecurityError" doc:id="e668e57c-e4d8-4374-a6ed-a56175604241" config-ref="errorHandlerPluginConfig"/>
+			<set-variable value="500" doc:name="HttpStatusResponse" doc:id="6bc4fe79-51a7-4cdb-b593-0a1c2a99784f" variableName="httpStatus"/>
+			<flow-ref doc:name="callGenerateErrorSubFlow" doc:id="78a616e1-f4d5-486f-84b7-1c09164e271f" name="Generate_Error_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d9eae672-2e74-4eef-85ec-e1ee3bb0f970" type="HTTP:SERVER_SECURITY">
+			<choice doc:name="httpServerSecurityError" doc:id="3981222f-8715-4f42-99af-8fedbe6cb3e7">
+			<when expression="#[error.errorType.identifier == 'UNAUTHORIZED']">
+					<error-handler-plugin:on-error doc:name="processUnauthorizedError" doc:id="7f4e8a89-e057-441b-b21d-90432f15e924" />
+					<set-variable value="401" doc:name="HttpStatusResponse" doc:id="6f65a255-f240-4f1a-934c-f3eec1bdfbb9" variableName="httpStatus" />
+				</when>
+				<otherwise >
+					<error-handler-plugin:on-error doc:name="processOtherError" doc:id="6046b14f-e197-4c9f-851f-99ffed8f39d3" />
+					<set-variable value="403" doc:name="HttpStatusResponse" doc:id="1c4bacd6-ec99-4737-8171-317b8e425a1c" variableName="httpStatus"/>
+				</otherwise>
+		</choice>
+			<flow-ref doc:name="callGenerateErrorSubFlow" doc:id="25daf27d-9135-4e43-bb28-18f3af6bb0a1" name="Generate_Error_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2390e947-ba7f-41b9-b6f1-42a1c294220c" type="ANY">
+			<choice doc:name="anyError" doc:id="e64bc363-ada5-43d1-909f-256d46a789a0" >
+				<when expression="#[error.errorType.namespace == 'APIKIT']">
+					<choice doc:name="apiKitErrors" doc:id="5c7a31ba-9681-4af6-8cca-24a2ccf3eb28" >
+						<when expression="#[error.errorType.identifier == 'BAD_REQUEST']">
+							<error-handler-plugin:on-error doc:name="processBadRequestError" doc:id="ff5d54ea-e58d-46da-bad2-7958690863cf" config-ref="errorHandlerPluginConfig"/>
+							<set-variable value="400" doc:name="HttpStatusResponse" doc:id="edb0df53-4f84-4d10-962a-55415149286f" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier == 'METHOD_NOT_ALLOWED']">
+							<error-handler-plugin:on-error doc:name="processMethodNotAllowedError" doc:id="11013477-6794-408a-8535-6ef6fa668955" config-ref="errorHandlerPluginConfig"/>
+							<set-variable value="405" doc:name="HttpStatusResponse" doc:id="e4c91baf-781c-45e3-aad7-0124cfe01101" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier == 'UNSUPPORTED_MEDIA_TYPE']">
+							<error-handler-plugin:on-error doc:name="processUnsupportedMediaTypeError" doc:id="b6b19893-f098-46d9-983b-5a03d1f42c6c" config-ref="errorHandlerPluginConfig"/>
+							<set-variable value="415" doc:name="HttpStatusResponse" doc:id="b9b758d9-6085-49ca-bba2-ae3c31941b5f" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier == 'NOT_FOUND']">
+							<error-handler-plugin:on-error doc:name="processNotFoundError" doc:id="1a77bede-fb7a-4089-965a-5738068dfba7" config-ref="errorHandlerPluginConfig"/>
+							<set-variable value="404" doc:name="HttpStatusResponse" doc:id="d3fe4217-15e7-4320-8cc0-865157b7c46c" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier == 'NOT_ACCEPTABLE']">
+							<error-handler-plugin:on-error doc:name="processNotAcceptableError" doc:id="001e1e1b-d6f1-4d1a-a3c1-7c13495ad499" config-ref="errorHandlerPluginConfig"/>
+							<set-variable value="406" doc:name="HttpStatusResponse" doc:id="5bce0755-4f54-450f-a114-67ff78edd66e" variableName="httpStatus"/>
+						</when>
+					</choice>
+				</when>
+				<otherwise >
+					<error-handler-plugin:on-error doc:name="processAnyError" doc:id="eebf56a6-5de8-4e01-becb-1b1046dff19f" config-ref="errorHandlerPluginConfig"/>
+					<set-variable value="500" doc:name="HttpStatusResponse" doc:id="89a7e01d-4339-4b04-a27d-ed35c39dd97e" variableName="httpStatus"/>
+				</otherwise>
+			</choice>
+			<flow-ref doc:name="callGenerateErrorSubFlow" doc:id="433a4901-d92e-41e4-bc82-5711b732884e" name="Generate_Error_Flow"/>
+		</on-error-propagate>
+	</error-handler>
+	<sub-flow name="Generate_Error_Flow" doc:id="284da6ef-635c-4a37-92c5-3de9e5eba694" >
+		<ee:transform doc:name="GenerateErrorDetail" doc:id="77a50d75-1efc-4070-b090-ba755151859e">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"node" : payload.apiName,
+	"correlationId" : payload.correlationId,
+	"code" : vars.httpStatus,
+	"type" : error.errorType.identifier,
+	"message" : payload.errorDetails.message
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="errorStatus" doc:id="ddf347ae-3e45-4579-8603-49bf0428a903" config-ref="JsonLoggerConfig" message='#["error received"]'>
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(payload) ++ {"status":"ERROR"}
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

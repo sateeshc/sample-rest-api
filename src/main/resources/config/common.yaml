@@ -1,0 +1,41 @@
+#configuration elements for local environment
+api:
+  id: "12345"
+  name: "rest-api-project-template"
+  version: "v1"
+
+######   HTTP Listener Properties   #######
+http:
+  listener:
+    host: "0.0.0.0"
+    port: "8091"
+    path: "/api/v1/*"
+
+https:
+  listener:
+    host: "0.0.0.0"
+    port: "8092"
+    path: "/api/v1/*"
+    
+### JSON Logger configuration ###
+json:
+  logger:
+    # Indicate which fields should not be logged
+    disabledFields: ""
+    category: ""
+    application:
+    # [DO NOT EDIT] To be replaced by Maven build
+      #name: ${project.artifactId}
+      #version: ${project.version}
+      version: "1.0.0"
+      
+## Health Checker properties ##
+
+health:
+  request:
+    host: "0.0.0.0"
+    port: "8081"
+    path: "/api/health"
+  scheduler:
+    frequency: "15"
+    startdelay: "0"

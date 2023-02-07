@@ -1,0 +1,27 @@
+#%RAML 1.0 Library
+types:
+  getHealthResponseType:
+    displayName: Standard Health Response Item
+    description: Health Response
+    type: object
+    properties:
+      status:
+        description: Status
+        required: true
+        type: string
+        example: Ok 
+      timestamp:
+        description: Time stamp
+        required: true
+        type: datetime
+        example: 2020-02-28T16:41:41.090Z
+      apiname:
+        description: API Name
+        required: true
+        type: string
+        example: sAPI-test-example
+      apiverison:
+        description: Error Description
+        required: true
+        type: string
+        example:  "v1"

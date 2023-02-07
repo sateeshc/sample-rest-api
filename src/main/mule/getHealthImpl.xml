@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:box="http://www.mulesoft.org/schema/mule/box"
+	xmlns:dam-psystem-api="http://www.mulesoft.org/schema/mule/dam-psystem-api" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:error-handler-plugin="http://www.mulesoft.org/schema/mule/error-handler-plugin"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org/schema/mule/error-handler-plugin/current/mule-error-handler-plugin.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/dam-psystem-api http://www.mulesoft.org/schema/mule/dam-psystem-api/current/mule-dam-psystem-api.xsd
+http://www.mulesoft.org/schema/mule/box http://www.mulesoft.org/schema/mule/box/current/mule-box.xsd">
+	<flow name="getHealthImpl_mainFlow" doc:id="4493538a-a77f-40d7-afb8-c55a1ce9e9da" >
+		<json-logger:logger doc:name="startOfHealthCheck" doc:id="98561649-0750-46f8-9f76-2daff65aeceb" config-ref="JsonLoggerConfig" message='"Request received"'/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="getHealthStatusResponse">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: "OK",
+  statuscode: "200",
+  timestamp: now(),
+  apiname: p('api.name'),
+  apiverison: p('api.version')
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="endOfHealthCheck" doc:id="f93215e3-7260-418c-9d8a-f3ca93b96a12" config-ref="JsonLoggerConfig" message='"Response sent"' tracePoint="END"/>
+	</flow>
+</mule>
+

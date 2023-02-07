@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	
+	<flow name="scheduledHealthCheckerFlow" doc:id="bbf9bd79-9406-4ce9-97d1-9e35a5a8c10b" >
+		<scheduler doc:name="runEvery15Minutes" doc:id="404bf4c0-717a-4500-8504-8b4ff778755f" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="${health.scheduler.frequency}" timeUnit="MINUTES" startDelay="${health.scheduler.startdelay}"/>
+			</scheduling-strategy>
+		</scheduler>
+		<http:request method="GET" doc:name="callHealthEndPoint" doc:id="790a1bf0-13d4-468b-8900-89f6707582b8" config-ref="healthCheckRequestConfig" path="${health.request.path}"/>
+		<json-logger:logger doc:name="logHealthCheckStatus" doc:id="f76d4d64-74f4-4566-8f73-360218ce8148" config-ref="JsonLoggerConfig" message="health check status: pass" category="${json.logger.category}" tracePoint="END"/>
+	</flow>
+</mule>
