@@ -16,11 +16,9 @@
         <priority>3</priority>
         <properties>
             <property name="xpath">
-                <value>
-                    <![CDATA[
-                    count(//mule:mule/*:autodiscovery)=0
-                    ]]>
-                </value>
+                    <value><![CDATA[
+                    .[count(//*:mule/*:autodiscovery)>0]
+                    ]]></value>
             </property>
         </properties>
     </rule>
