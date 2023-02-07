@@ -2,6 +2,9 @@
        <exclude-pattern>.*/src/main/mule/.*</exclude-pattern>
         <exclude-pattern>.*/src/main/resources/.*</exclude-pattern>
         <exclude-pattern>.*/pom.xml</exclude-pattern>
+        <exclude-pattern>.*/ruleset.xml</exclude-pattern>
+        <exclude-pattern>.*/src/test/.*</exclude-pattern>
+
         <include-pattern>.*/src/main/mule/global.xml</include-pattern>
     <rule name="AutoDiscoveryShouldBeUsedForApis"
         language="xml"
