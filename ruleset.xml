@@ -1,24 +1,38 @@
-<ruleset name="Mule4  ruleset">
-    <exclude-pattern>.*/src/main/mule/.*</exclude-pattern>
-    <exclude-pattern>.*/src/main/resources/.*</exclude-pattern>
-    <exclude-pattern>.*/pom.xml</exclude-pattern>
-    <exclude-pattern>.*/ruleset.xml</exclude-pattern>
-    <exclude-pattern>.*/src/test/.*</exclude-pattern>
-    <include-pattern>.*/src/main/mule/global.xml</include-pattern>
-    <description>
-        Ruleset applied to global rules
-    </description>
-    <rule name="AutoDiscoveryShouldBeUsedForApis"
-        language="xml"
-        message="AutoDiscovery should be used to register the app in API manager"
-        class="net.sourceforge.pmd.lang.xml.rule.DomXPathRule">
-        <description>
-            AutoDiscovery should be used to register the app in API manager
-        </description>
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Ruleset for Mule 4" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+<description>Default ruleset for PMD</description>
+
+<!--
+       <rule name="NoUnderscoresInFieldNames" language="xml" message="Custom fields should not contain underscores." class="net.sourceforge.pmd.lang.xml.rule.DomXPathRule">
+              <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value><![CDATA[
-                      count(//*:mule/*:autodiscovery)>0
+                 not(matches(//CustomField/fullName/text(), ".*_.*__c"))
+                    //CustomField/fullName/text[matches(@Image, ".*_.*__c")]
+                ]]></value>
+            </property>
+
+        </properties>
+    </rule>
+-->
+       <rule name="FlowNameShouldMatchConvention" language="xml" message="Flows names should match a naming convention" class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule/flow[not(matches(@name, '^[a-z:\\{}]+(-[a-z]+)*$'))]
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+       <rule name="ExcessiveNumberOfFlows" language="xml" message="Configuration files should not have so many flows" class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(flow) > 2]
                 ]]></value>
             </property>
         </properties>
