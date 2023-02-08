@@ -18,6 +18,7 @@
     </rule>
 -->
        <rule name="FlowNameShouldMatchConvention" language="xml" message="Flows names should match a naming convention" class="net.sourceforge.pmd.lang.rule.XPathRule">
+            <priority>3</priority>
         <properties>
             <property name="version" value="2.0"></property>
             <property name="xpath">
@@ -28,6 +29,7 @@
         </properties>
     </rule>
        <rule name="ExcessiveNumberOfFlows" language="xml" message="Configuration files should not have so many flows" class="net.sourceforge.pmd.lang.rule.XPathRule">
+            <priority>2</priority>
         <properties>
             <property name="version" value="2.0"></property>
             <property name="xpath">
