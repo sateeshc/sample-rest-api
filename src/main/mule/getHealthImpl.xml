@@ -28,4 +28,3 @@ output application/json
 		<json-logger:logger doc:name="endOfHealthCheck" doc:id="f93215e3-7260-418c-9d8a-f3ca93b96a12" config-ref="JsonLoggerConfig" message='"Response sent"' tracePoint="END"/>
 	</flow>
 </mule>
-

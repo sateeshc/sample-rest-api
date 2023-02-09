@@ -11,19 +11,27 @@ http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org
     
     <!-- GLOBAL Properties END HERE -->
     <http:listener-config name="apiRamlTemplateHttpListenerConfig">
-        <http:listener-connection host="${http.listener.host}" port="${http.listener.port}" />
+        <http:listener-connection host="${http.listener.host}" port="${https.listener.port}" protocol="HTTPS"/>
     </http:listener-config>
     <http:request-config name="healthCheckRequestConfig" doc:name="HTTP Request configuration" doc:id="e285c539-1685-482f-9344-ba24b3310afc" >
-		<http:request-connection host="${health.request.host}" port="${health.request.port}" />
+		<http:request-connection host="${health.request.host}" port="${health.request.port}">
+            <reconnection >
+				<reconnect frequency="200033" count="${count}"/>
+			</reconnection>
+        </http:request-connection>
 	</http:request-config>
+   
     <secure-properties:config name="secure.properties.config" doc:name="Secure Properties Config" doc:id="eeb3ce8e-d424-43fe-8de2-122fdf0bfbc7" file="config/secure-config-${mule.env}.yaml" key="${mule.key}" />
+   
     <!-- HTTP(s) Listener Config - START HERE -->
     <apikit:config name="apiRamlTemplateConfig" api="api-raml-template.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-
-     <api-gateway:autodiscovery apiId="12345" doc:name="API Autodiscovery" doc:id="b79c97b5-1dbf-4eb0-b4c3-9541c4c334a3" flowRef="rest-api-project-template-main" ignoreBasePath="true"/>
-
+     
+    <api-gateway:autodiscovery apiId="12345" doc:name="API Autodiscovery" doc:id="b79c97b5-1dbf-4eb0-b4c3-9541c4c334a3" flowRef="rest-api-project-template-main" ignoreBasePath="true"/>
+    
 	<configuration-properties doc:name="Configuration properties" doc:id="24bc6686-6f47-4fc1-b882-cadd76061cd9" file="config/common.yaml" />
-	<json-logger:config name="JsonLoggerConfig" doc:name="JSON Logger Config" doc:id="949e0cab-b29d-4ab9-94ff-2ba779a28c68" environment="${mule.env}" applicationName="#[app.name]"/>
+
+    <json-logger:config name="JsonLoggerConfig" doc:name="JSON Logger Config" doc:id="949e0cab-b29d-4ab9-94ff-2ba779a28c68" environment="${mule.env}" applicationName="#[app.name]"/>
 	<configuration doc:name="Configuration" doc:id="ef26f7df-b414-44f7-9516-9afbe68579d5" defaultErrorHandler-ref="Global_Error_Handler" />
 	<error-handler-plugin:config name="errorHandlerPluginConfig" doc:name="Error Handler Plugin Config" doc:id="7a946789-5c91-40ac-b106-6540e68f81d1" />
+   
 </mule>
