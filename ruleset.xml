@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Ruleset for Mule 4"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>Default ruleset for PMD</description>
+
+    <!--
+       <rule name="NoUnderscoresInFieldNames" language="xml" message="Custom fields should not contain
+    underscores." class="net.sourceforge.pmd.lang.xml.rule.DomXPathRule">
+              <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[
+                 not(matches(//CustomField/fullName/text(), ".*_.*__c"))
+                    //CustomField/fullName/text[matches(@Image, ".*_.*__c")]
+                ]]></value>
+            </property>
+
+        </properties>
+    </rule>
+    -->
+    <rule name="FlowNameShouldMatchConvention" language="xml"
+        message="Flow names should match the naming convention"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule/flow[not(matches(@name, '^[a-z:\\{}]+(-[a-z]+)*$'))]
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="ExcessiveNumberOfFlows" language="xml"
+        message="Configuration files should not have so many flows"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(flow) > 2]
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="SecureConfigurationPropertyPresent" language="xml"
+        message="Credentials should be managed with secure application properties"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(*[name() = 'secure-properties:config']) = 0 and pmd:fileName() = 'global.xml']
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="ConfigurationPropertyPresent" language="xml"
+        message="Properties should be managed with configuration property files"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(*[name() = 'configuration-properties']) = 0 and pmd:fileName() = 'global.xml']
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="JSONLoggerIsConfigured" language="xml"
+        message="JSON Logger should be configured to log "
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(*[name() = 'json-logger:config']) = 0 and pmd:fileName() = 'global.xml']
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="ErrorHandlerPluginIsConfigured" language="xml"
+        message="Error Handler Plugin configuration should be present "
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(*[name() = 'error-handler-plugin:config']) = 0 and pmd:fileName() = 'global.xml']
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="AutoDiscoveryEnabledForAPI" language="xml"
+        message="AutoDiscovery should be used to register the app in API manager"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+                    //mule[count(*[name() = 'api-gateway:autodiscovery']) = 0 and pmd:fileName() = 'global.xml']
+                ]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="DataTransformInExternalDWLFilesPayload" language="xml"
+        message="Data Transformations should be stored in external DWL Files - Payload"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/flow/*[name() = 'ee:transform']/*[name() = 'ee:message']/*[name() = 'ee:set-payload'][not(matches(@resource, '^.*dwl$'))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="DataTransformInExternalDWLFilesVariable" language="xml"
+        message="Data Transformations should be stored in external DWL Files - Variable"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/flow/*[name() = 'ee:transform']/*[name() = 'ee:message']/*[name() = 'ee:set-variable'][not(matches(@resource, '^.*dwl$'))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="HTTPListenerUseHTTPS" language="xml"
+        message="HTTP Listener should use HTTPS protocol"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/*[name() = 'http:listener-config']/*[name() = 'http:listener-connection'][not(matches(@protocol, 'HTTPS'))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="HTTPListenerSpecificPort" language="xml"
+        message="HTTP Listener should use a specific port property"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/*[name() = 'http:listener-config']/*[name() = 'http:listener-connection'][not(matches(@port, '\$\{https.port\}') or (matches(@port, '\$\{https.private.port\}')) or (matches(@port, "\$\{https.listener.port\}")))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="APIIDHardcoded" language="xml"
+        message="API ID in AutoDiscovery should not use a hardcoded value"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/*[name() = 'api-gateway:autodiscovery'][not(matches(@apiId, '^\$\{.*\}$'))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="HTTPRequestFrequnecy" language="xml"
+        message="HTTP Requestor reconnection strategy should use configurable frequency"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[
+               //mule/*[name() = 'http:request-config']/*[name() = 'http:request-connection']/*[local-name() = 'reconnection']/*[local-name()='reconnect'][not(matches(@frequency, '^\$\{.*\}$'))]
+
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="HTTPRequestCount" language="xml"
+        message="HTTP Requestor reconnection strategy should use configurable count"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[
+               //mule/*[name() = 'http:request-config']/*[name() = 'http:request-connection']/*[local-name() = 'reconnection']/*[local-name()='reconnect'][not(matches(@count, '^\$\{.*\}$'))]
+
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+    <rule name="DataTransformInExternalDWLFilesPayload" language="xml"
+        message="Data Transformations should be stored in external DWL Files - Payload"
+        class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="version" value="2.0"></property>
+            <property name="xpath">
+                <value><![CDATA[
+     //mule/flow/*[name() = 'ee:transform']/*[name() = 'ee:message']/*[name() = 'ee:set-payload'][not(matches(@resource, '^.*dwl$'))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

@@ -1,0 +1,12 @@
+#common properties
+salesforce:
+  http:
+    host: ""
+    port: "443"
+#HTTP Based Rest Properties    
+    reconAttempts: "3"
+    reconFrequency: "20000"
+    maxConnections: "10"
+    connTimeout: "120000"
+    basePath: ""
+    accountPath: "Account"

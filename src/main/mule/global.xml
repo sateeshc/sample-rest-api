@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:error-handler-plugin="http://www.mulesoft.org/schema/mule/error-handler-plugin" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:att-mule-applicationlogger="http://www.mulesoft.org/schema/mule/att-mule-applicationlogger" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:external-configuration-provider="http://www.mulesoft.org/schema/mule/external-configuration-provider" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.mulesoft.org/schema/mule/att-mule-applicationlogger/current/mule-att-mule-applicationlogger.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/external-configuration-provider http://www.mulesoft.org/schema/mule/external-configuration-provider/current/mule-external-configuration-provider.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org/schema/mule/error-handler-plugin/current/mule-error-handler-plugin.xsd">
+    <!-- GLOBAL Properties START HERE -->
+    <global-property doc:name="Global Property" doc:id="bd56350e-7576-47dc-98e8-bbe52463cb87" name="latency.logging.enabled" value="true" doc:description="This is required to turn on the latency instrumentation. latency instrumentation can be turned off by setting this to false." />
+    <global-property doc:name="Global Property" doc:id="418be492-b5c7-4679-996b-0f33b99fe66c" name="mule.env" value="dev" />
+    <global-property doc:name="Global Property" doc:id="5f8b2b30-c07e-444b-bbf9-a8f1ed412e95" name="mule.key" value="Mulesoft12345678" />
+    <global-property doc:name="Global Property" doc:id="a866bfc6-d228-4f33-a485-9a73bf0e7035" name="api.path" value="${http.listener.path}" />
+    
+    <!-- GLOBAL Properties END HERE -->
+    <http:listener-config name="apiRamlTemplateHttpListenerConfig">
+        <http:listener-connection host="${http.listener.host}" port="${https.listener.port}" protocol="HTTPS"/>
+    </http:listener-config>
+    <http:request-config name="healthCheckRequestConfig" doc:name="HTTP Request configuration" doc:id="e285c539-1685-482f-9344-ba24b3310afc" >
+		<http:request-connection host="${health.request.host}" port="${health.request.port}">
+            <reconnection >
+				<reconnect frequency="200033" count="${count}"/>
+			</reconnection>
+        </http:request-connection>
+	</http:request-config>
+   
+    <secure-properties:config name="secure.properties.config" doc:name="Secure Properties Config" doc:id="eeb3ce8e-d424-43fe-8de2-122fdf0bfbc7" file="config/secure-config-${mule.env}.yaml" key="${mule.key}" />
+   
+    <!-- HTTP(s) Listener Config - START HERE -->
+    <apikit:config name="apiRamlTemplateConfig" api="api-raml-template.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+     
+    <api-gateway:autodiscovery apiId="12345" doc:name="API Autodiscovery" doc:id="b79c97b5-1dbf-4eb0-b4c3-9541c4c334a3" flowRef="rest-api-project-template-main" ignoreBasePath="true"/>
+    
+	<configuration-properties doc:name="Configuration properties" doc:id="24bc6686-6f47-4fc1-b882-cadd76061cd9" file="config/common.yaml" />
+
+    <json-logger:config name="JsonLoggerConfig" doc:name="JSON Logger Config" doc:id="949e0cab-b29d-4ab9-94ff-2ba779a28c68" environment="${mule.env}" applicationName="#[app.name]"/>
+	<configuration doc:name="Configuration" doc:id="ef26f7df-b414-44f7-9516-9afbe68579d5" defaultErrorHandler-ref="Global_Error_Handler" />
+	<error-handler-plugin:config name="errorHandlerPluginConfig" doc:name="Error Handler Plugin Config" doc:id="7a946789-5c91-40ac-b106-6540e68f81d1" />
+   
+</mule>
